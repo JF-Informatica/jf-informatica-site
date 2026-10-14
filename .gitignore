@@ -1,0 +1,25 @@
+﻿# Sistema operacional / editores
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Variáveis e segredos
+.env
+.env.*
+*.secret
+*.key
+*.pem
+
+# Dependências / build
+node_modules/
+.wrangler/
+.dev.vars
+
+# Temporários
+*.tmp
+*.bak
+*.log
+
+# Pacotes de deploy
+*.zip
