@@ -1,4 +1,4 @@
-﻿const PBKDF2_ITERATIONS = 600000;
+﻿const PBKDF2_ITERATIONS = 100000;
 const SALT_BYTES = 16;
 const HASH_BYTES = 32;
 
@@ -121,3 +121,4 @@ export async function verifyPassword(password, storedHash) {
     return false;
   }
 }
+

@@ -22,7 +22,7 @@ export async function onRequestGet() {
           ? "ok"
           : "error",
       algorithm: "PBKDF2-HMAC-SHA-256",
-      iterations: 600000,
+      iterations: 100000,
       correct_password_accepted: correctPasswordAccepted,
       wrong_password_rejected: wrongPasswordRejected
     });
@@ -36,3 +36,4 @@ export async function onRequestGet() {
     );
   }
 }
+
