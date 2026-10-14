@@ -29,10 +29,17 @@ function getCookie(request, name) {
   }
 
   for (const part of cookieHeader.split(";")) {
-    const [cookieName, ...cookieValue] = part.trim().split("=");
+    const separator = part.indexOf("=");
+
+    if (separator === -1) {
+      continue;
+    }
+
+    const cookieName = part.slice(0, separator).trim();
+    const cookieValue = part.slice(separator + 1).trim();
 
     if (cookieName === name) {
-      return cookieValue.join("=");
+      return cookieValue || null;
     }
   }
 
@@ -46,15 +53,19 @@ export async function onRequestPost(context) {
       "jf_session"
     );
 
+    let sessionRevoked = false;
+
     if (sessionToken) {
       const tokenHash = await sha256(sessionToken);
 
-      await context.env.DB
+      const result = await context.env.DB
         .prepare(
           "DELETE FROM sessions WHERE token_hash = ?"
         )
         .bind(tokenHash)
         .run();
+
+      sessionRevoked = result.meta.changes > 0;
     }
 
     const cookie = [
@@ -69,7 +80,8 @@ export async function onRequestPost(context) {
     return jsonResponse(
       {
         status: "ok",
-        authenticated: false
+        authenticated: false,
+        session_revoked: sessionRevoked
       },
       200,
       {
