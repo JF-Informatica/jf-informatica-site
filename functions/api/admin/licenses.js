@@ -39,6 +39,7 @@ export async function onRequestGet(context) {
            customer_name,
            product_name,
            license_key,
+           environment,
            equipment_name,
            activated_at,
            expires_at,
@@ -67,6 +68,7 @@ export async function onRequestGet(context) {
         customer_name: row.customer_name,
         product_name: row.product_name,
         license_key: row.license_key,
+        environment: row.environment,
         equipment_name: row.equipment_name,
         activated_at: row.activated_at,
         expires_at: row.expires_at,
@@ -88,6 +90,8 @@ export async function onRequestGet(context) {
         total: licenses.length,
         active,
         inactive: licenses.length - active,
+        production: licenses.filter((license) => license.environment === "production").length,
+        demo: licenses.filter((license) => license.environment === "demo").length,
         online,
         offline: active - online
       },
@@ -121,6 +125,7 @@ export async function onRequestPost(context) {
     const customerName = normalizeText(body.customer_name);
     const productName = normalizeText(body.product_name);
     const licenseKey = normalizeText(body.license_key);
+    const environment = normalizeText(body.environment) || "production";
     const equipmentName = normalizeOptionalText(body.equipment_name);
     const activatedAt = normalizeOptionalText(body.activated_at);
     const expiresAt = normalizeOptionalText(body.expires_at);
@@ -137,6 +142,10 @@ export async function onRequestPost(context) {
 
     if (!licenseKey || licenseKey.length > 255) {
       return jsonResponse({ status: "error", message: "Invalid license_key" }, 400);
+    }
+
+    if (!["production", "demo"].includes(environment)) {
+      return jsonResponse({ status: "error", message: "Invalid environment" }, 400);
     }
 
     if (equipmentName && equipmentName.length > 160) {
@@ -170,18 +179,20 @@ export async function onRequestPost(context) {
            customer_name,
            product_name,
            license_key,
+           environment,
            equipment_name,
            activated_at,
            expires_at,
            active,
            notes,
            updated_at
-         ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)`
+         ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)`
       )
       .bind(
         customerName,
         productName,
         licenseKey,
+        environment,
         equipmentName,
         activatedAt,
         expiresAt,
@@ -198,6 +209,7 @@ export async function onRequestPost(context) {
            customer_name,
            product_name,
            license_key,
+           environment,
            equipment_name,
            activated_at,
            expires_at,
