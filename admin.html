@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#07101f">
+  <meta name="robots" content="noindex,nofollow">
+  <title>Administrativo | JF Informática</title>
+  <link rel="icon" href="assets/logo-jf-informatica.png">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/admin.css">
+</head>
+<body>
+  <header>
+    <div class="wrap nav admin-nav">
+      <a class="logo" href="/"><img src="assets/logo-jf-informatica.png" alt="JF Informática"></a>
+      <div class="admin-nav-actions">
+        <span id="admin-user">Validando acesso...</span>
+        <a href="/#downloads">Downloads</a>
+        <button id="admin-logout" type="button">Sair</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="admin-main">
+    <section class="section admin-hero">
+      <div class="wrap">
+        <b class="tag">PORTAL ADMINISTRATIVO</b>
+        <h1>Administração JF Informática</h1>
+        <p>Gerenciamento seguro de usuários e acessos do portal.</p>
+      </div>
+    </section>
+
+    <section id="admin-content" class="section admin-content" hidden>
+      <div class="wrap admin-layout">
+        <div class="admin-panel">
+          <div class="admin-panel-head">
+            <div>
+              <b class="tag">USUÁRIOS</b>
+              <h2>Contas do portal</h2>
+            </div>
+            <button id="new-user-button" class="admin-primary" type="button">Cadastrar usuário</button>
+          </div>
+
+          <div id="admin-message" class="admin-message" role="status" aria-live="polite"></div>
+
+          <div class="admin-table-wrap">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>Nome</th>
+                  <th>Usuário</th>
+                  <th>E-mail</th>
+                  <th>Perfil</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody id="users-table-body">
+                <tr><td colspan="5">Carregando usuários...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <aside id="user-form-panel" class="admin-panel admin-form-panel" hidden>
+          <div class="admin-panel-head">
+            <div>
+              <b class="tag">NOVA CONTA</b>
+              <h2>Cadastrar usuário</h2>
+            </div>
+            <button id="close-user-form" class="admin-secondary" type="button">Fechar</button>
+          </div>
+
+          <form id="user-form" autocomplete="off">
+            <label>Nome
+              <input id="user-name" name="name" type="text" maxlength="120" required>
+            </label>
+            <label>Usuário
+              <input id="user-username" name="username" type="text" minlength="3" maxlength="64" pattern="[A-Za-z0-9._-]+" required>
+            </label>
+            <label>E-mail
+              <input id="user-email" name="email" type="email" maxlength="254" required>
+            </label>
+            <label>Perfil
+              <select id="user-role" name="role">
+                <option value="user">Usuário</option>
+                <option value="admin">Administrador</option>
+              </select>
+            </label>
+            <label>Senha inicial
+              <input id="user-password" name="password" type="password" minlength="12" autocomplete="new-password" required>
+              <small>Mínimo de 12 caracteres.</small>
+            </label>
+            <button id="save-user-button" class="admin-primary" type="submit">Cadastrar usuário</button>
+          </form>
+        </aside>
+      </div>
+    </section>
+
+    <section id="access-denied" class="section admin-access" hidden>
+      <div class="wrap">
+        <div class="admin-panel">
+          <h2>Acesso não autorizado</h2>
+          <p>Esta área é exclusiva para administradores do portal.</p>
+          <a class="admin-primary admin-inline-button" href="/#downloads">Voltar ao portal</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="js/admin.js"></script>
+</body>
+</html>
