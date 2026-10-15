@@ -1,5 +1,7 @@
 import { requireAdmin } from "../../_lib/auth.js";
 
+const LICENSE_ALPHABET = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+
 function jsonResponse(data, status = 200) {
   return Response.json(data, {
     status,
@@ -27,6 +29,24 @@ function isSameOrigin(request) {
   return origin === new URL(request.url).origin;
 }
 
+function generateLicenseKey() {
+  const bytes = new Uint8Array(32);
+  crypto.getRandomValues(bytes);
+  const chars = Array.from(bytes, (value) => LICENSE_ALPHABET[value % LICENSE_ALPHABET.length]);
+  const groups = [];
+  for (let i = 0; i < chars.length; i += 4) groups.push(chars.slice(i, i + 4).join(""));
+  return groups.join("-");
+}
+
+async function generateUniqueLicenseKey(db) {
+  for (let attempt = 0; attempt < 10; attempt += 1) {
+    const key = generateLicenseKey();
+    const existing = await db.prepare("SELECT id FROM licenses WHERE license_key = ? LIMIT 1").bind(key).first();
+    if (!existing) return key;
+  }
+  throw new Error("Unable to generate unique license key");
+}
+
 export async function onRequestGet(context) {
   try {
     const auth = await requireAdmin(context);
@@ -34,20 +54,9 @@ export async function onRequestGet(context) {
 
     const result = await context.env.DB
       .prepare(
-        `SELECT
-           id,
-           customer_name,
-           product_name,
-           license_key,
-           environment,
-           equipment_name,
-           activated_at,
-           expires_at,
-           active,
-           last_seen_at,
-           notes,
-           created_at,
-           updated_at
+        `SELECT id, customer_name, product_name, license_key, environment,
+                equipment_name, activated_at, expires_at, active, last_seen_at,
+                notes, created_at, updated_at
          FROM licenses
          ORDER BY customer_name COLLATE NOCASE ASC,
                   product_name COLLATE NOCASE ASC,
@@ -62,22 +71,10 @@ export async function onRequestGet(context) {
     const licenses = rows.map((row) => {
       const lastSeen = row.last_seen_at ? new Date(row.last_seen_at).getTime() : NaN;
       const online = row.active === 1 && Number.isFinite(lastSeen) && (now - lastSeen) <= onlineThresholdMs;
-
       return {
-        id: row.id,
-        customer_name: row.customer_name,
-        product_name: row.product_name,
-        license_key: row.license_key,
-        environment: row.environment,
-        equipment_name: row.equipment_name,
-        activated_at: row.activated_at,
-        expires_at: row.expires_at,
+        ...row,
         active: row.active === 1,
-        online,
-        last_seen_at: row.last_seen_at,
-        notes: row.notes,
-        created_at: row.created_at,
-        updated_at: row.updated_at
+        online
       };
     });
 
@@ -99,10 +96,7 @@ export async function onRequestGet(context) {
       licenses
     });
   } catch {
-    return jsonResponse(
-      { status: "error", message: "Unable to load licenses" },
-      500
-    );
+    return jsonResponse({ status: "error", message: "Unable to load licenses" }, 500);
   }
 }
 
@@ -124,10 +118,7 @@ export async function onRequestPost(context) {
 
     const customerName = normalizeText(body.customer_name);
     const productName = normalizeText(body.product_name);
-    const licenseKey = normalizeText(body.license_key);
     const environment = normalizeText(body.environment) || "production";
-    const equipmentName = normalizeOptionalText(body.equipment_name);
-    const activatedAt = normalizeOptionalText(body.activated_at);
     const expiresAt = normalizeOptionalText(body.expires_at);
     const notes = normalizeOptionalText(body.notes);
     const active = body.active === undefined ? 1 : body.active === true || body.active === 1 ? 1 : 0;
@@ -140,86 +131,41 @@ export async function onRequestPost(context) {
       return jsonResponse({ status: "error", message: "Invalid product_name" }, 400);
     }
 
-    if (!licenseKey || licenseKey.length > 255) {
-      return jsonResponse({ status: "error", message: "Invalid license_key" }, 400);
-    }
-
     if (!["production", "demo"].includes(environment)) {
       return jsonResponse({ status: "error", message: "Invalid environment" }, 400);
-    }
-
-    if (equipmentName && equipmentName.length > 160) {
-      return jsonResponse({ status: "error", message: "Invalid equipment_name" }, 400);
     }
 
     if (notes && notes.length > 2000) {
       return jsonResponse({ status: "error", message: "Invalid notes" }, 400);
     }
 
-    if (!isValidDateValue(activatedAt) || !isValidDateValue(expiresAt)) {
-      return jsonResponse({ status: "error", message: "Invalid date" }, 400);
+    if (!isValidDateValue(expiresAt)) {
+      return jsonResponse({ status: "error", message: "Invalid expires_at" }, 400);
     }
 
-    if (activatedAt && expiresAt && new Date(expiresAt).getTime() < new Date(activatedAt).getTime()) {
-      return jsonResponse({ status: "error", message: "expires_at must not be earlier than activated_at" }, 400);
+    if (environment === "demo" && !expiresAt) {
+      return jsonResponse({ status: "error", message: "Demo license requires expires_at" }, 400);
     }
 
-    const duplicate = await context.env.DB
-      .prepare("SELECT id FROM licenses WHERE license_key = ? LIMIT 1")
-      .bind(licenseKey)
-      .first();
-
-    if (duplicate) {
-      return jsonResponse({ status: "error", message: "License key already exists" }, 409);
-    }
+    const licenseKey = await generateUniqueLicenseKey(context.env.DB);
 
     const insert = await context.env.DB
       .prepare(
         `INSERT INTO licenses (
-           customer_name,
-           product_name,
-           license_key,
-           environment,
-           equipment_name,
-           activated_at,
-           expires_at,
-           active,
-           notes,
-           updated_at
-         ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)`
+           customer_name, product_name, license_key, environment,
+           equipment_name, activated_at, expires_at, active, notes, updated_at
+         ) VALUES (?, ?, ?, ?, NULL, NULL, ?, ?, ?, CURRENT_TIMESTAMP)`
       )
-      .bind(
-        customerName,
-        productName,
-        licenseKey,
-        environment,
-        equipmentName,
-        activatedAt,
-        expiresAt,
-        active,
-        notes
-      )
+      .bind(customerName, productName, licenseKey, environment, expiresAt, active, notes)
       .run();
 
     const id = insert.meta?.last_row_id;
     const license = await context.env.DB
       .prepare(
-        `SELECT
-           id,
-           customer_name,
-           product_name,
-           license_key,
-           environment,
-           equipment_name,
-           activated_at,
-           expires_at,
-           active,
-           last_seen_at,
-           notes,
-           created_at,
-           updated_at
-         FROM licenses
-         WHERE id = ?`
+        `SELECT id, customer_name, product_name, license_key, environment,
+                equipment_name, activated_at, expires_at, active, last_seen_at,
+                notes, created_at, updated_at
+         FROM licenses WHERE id = ?`
       )
       .bind(id)
       .first();
@@ -234,12 +180,8 @@ export async function onRequestPost(context) {
     }, 201);
   } catch (error) {
     if (String(error?.message || "").includes("UNIQUE constraint failed")) {
-      return jsonResponse({ status: "error", message: "License key already exists" }, 409);
+      return jsonResponse({ status: "error", message: "License key collision" }, 409);
     }
-
-    return jsonResponse(
-      { status: "error", message: "Unable to create license" },
-      500
-    );
+    return jsonResponse({ status: "error", message: "Unable to generate license" }, 500);
   }
 }
