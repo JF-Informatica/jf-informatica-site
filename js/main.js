@@ -1,4 +1,4 @@
-﻿const menu = document.querySelector("#menu");
+const menu = document.querySelector("#menu");
 const nav = document.querySelector(".nav nav");
 
 menu?.addEventListener("click", () => nav?.classList.toggle("open"));
@@ -24,16 +24,47 @@ function showMessage(message, isError = false) {
   authMessage.style.color = isError ? "#ff9b9b" : "#91e5b1";
 }
 
+function updateAdminAccess(user) {
+  const existing = document.querySelector("#admin-portal-link");
+
+  if (user?.role !== "admin") {
+    existing?.remove();
+    return;
+  }
+
+  if (existing || !authSession) return;
+
+  const link = document.createElement("a");
+  link.id = "admin-portal-link";
+  link.href = "/admin.html";
+  link.textContent = "Portal Administrativo";
+  link.style.display = "flex";
+  link.style.alignItems = "center";
+  link.style.justifyContent = "center";
+  link.style.width = "100%";
+  link.style.margin = "16px 0 8px";
+  link.style.padding = "13px";
+  link.style.borderRadius = "8px";
+  link.style.background = "#102e50";
+  link.style.color = "#65d3ff";
+  link.style.fontWeight = "800";
+  link.style.border = "1px solid #285176";
+
+  authSession.insertBefore(link, logoutButton);
+}
+
 function showAuthenticated(user) {
   if (loginForm) loginForm.hidden = true;
   if (authSession) authSession.hidden = false;
   showMessage(`Acesso autenticado: ${user.name}`);
+  updateAdminAccess(user);
   loadDownloads();
 }
 
 function showLoggedOut() {
   if (loginForm) loginForm.hidden = false;
   if (authSession) authSession.hidden = true;
+  document.querySelector("#admin-portal-link")?.remove();
 }
 
 async function checkSession() {
@@ -215,4 +246,3 @@ async function loadDownloads() {
       "Não foi possível carregar os arquivos disponíveis.";
   }
 }
-
