@@ -63,6 +63,7 @@ export async function onRequestGet(context) {
            u.username,
            u.name,
            u.email,
+           u.role,
            u.active
          FROM sessions s
          INNER JOIN users u ON u.id = s.user_id
@@ -97,7 +98,8 @@ export async function onRequestGet(context) {
         id: session.id,
         username: session.username,
         name: session.name,
-        email: session.email
+        email: session.email,
+          role: session.role
       }
     });
   } catch {
@@ -107,3 +109,4 @@ export async function onRequestGet(context) {
     );
   }
 }
+
