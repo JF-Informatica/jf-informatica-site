@@ -1,4 +1,4 @@
-﻿import { verifyPassword } from "../_lib/password.js";
+import { verifyPassword } from "../_lib/password.js";
 
 const SESSION_HOURS = 8;
 
@@ -67,7 +67,7 @@ export async function onRequestPost(context) {
 
     const user = await context.env.DB
       .prepare(
-        `SELECT id, username, password_hash, name, email, active
+        `SELECT id, username, password_hash, name, email, role, active
          FROM users
          WHERE username = ?
          LIMIT 1`
@@ -131,7 +131,8 @@ export async function onRequestPost(context) {
           id: user.id,
           username: user.username,
           name: user.name,
-          email: user.email
+          email: user.email,
+          role: user.role
         }
       },
       200,
