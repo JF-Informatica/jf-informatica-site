@@ -54,7 +54,7 @@ export async function onRequestGet(context) {
 
     const result = await context.env.DB
       .prepare(
-        `SELECT id, customer_name, product_name, license_key, environment,
+        `SELECT id, public_id, customer_name, product_name, license_key, environment,
                 equipment_name, activated_at, expires_at, active, last_seen_at,
                 notes, created_at, updated_at
          FROM licenses
@@ -147,22 +147,23 @@ export async function onRequestPost(context) {
       return jsonResponse({ status: "error", message: "Demo license requires expires_at" }, 400);
     }
 
+    const publicId = crypto.randomUUID();
     const licenseKey = await generateUniqueLicenseKey(context.env.DB);
 
     const insert = await context.env.DB
       .prepare(
         `INSERT INTO licenses (
-           customer_name, product_name, license_key, environment,
+           public_id, customer_name, product_name, license_key, environment,
            equipment_name, activated_at, expires_at, active, notes, updated_at
-         ) VALUES (?, ?, ?, ?, NULL, NULL, ?, ?, ?, CURRENT_TIMESTAMP)`
+         ) VALUES (?, ?, ?, ?, ?, NULL, NULL, ?, ?, ?, CURRENT_TIMESTAMP)`
       )
-      .bind(customerName, productName, licenseKey, environment, expiresAt, active, notes)
+      .bind(publicId, customerName, productName, licenseKey, environment, expiresAt, active, notes)
       .run();
 
     const id = insert.meta?.last_row_id;
     const license = await context.env.DB
       .prepare(
-        `SELECT id, customer_name, product_name, license_key, environment,
+        `SELECT id, public_id, customer_name, product_name, license_key, environment,
                 equipment_name, activated_at, expires_at, active, last_seen_at,
                 notes, created_at, updated_at
          FROM licenses WHERE id = ?`
@@ -180,7 +181,7 @@ export async function onRequestPost(context) {
     }, 201);
   } catch (error) {
     if (String(error?.message || "").includes("UNIQUE constraint failed")) {
-      return jsonResponse({ status: "error", message: "License key collision" }, 409);
+      return jsonResponse({ status: "error", message: "License identifier collision" }, 409);
     }
     return jsonResponse({ status: "error", message: "Unable to generate license" }, 500);
   }
