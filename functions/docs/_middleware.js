@@ -1,10 +1,10 @@
-import { requireAdmin } from "../_lib/auth.js";
+import { requireAuth } from "../_lib/auth.js";
 
 export async function onRequest(context) {
-  const auth = await requireAdmin(context);
+  const auth = await requireAuth(context);
 
   if (auth.response) {
-    return new Response("Acesso não autorizado", {
+    return new Response("Autenticação necessária", {
       status: auth.response.status || 401,
       headers: {
         "Content-Type": "text/plain; charset=utf-8",
