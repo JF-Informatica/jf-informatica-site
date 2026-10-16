@@ -14,29 +14,32 @@ const loginButton = document.querySelector("#login-button");
 const logoutButton = document.querySelector("#logout-button");
 const authMessage = document.querySelector("#auth-message");
 const authSession = document.querySelector("#auth-session");
+const authTitle = document.querySelector("#auth-title");
 
 function showMessage(message, isError = false) {
   if (!authMessage) return;
   authMessage.textContent = message;
-  authMessage.style.color = isError ? "#ff9b9b" : "#91e5b1";
+  authMessage.classList.toggle("error", isError);
 }
 
 function updateAdminAccess(user) {
   const existing = document.querySelector("#admin-portal-link");
   if (user?.role !== "admin") { existing?.remove(); return; }
   if (existing || !authSession) return;
+  const actions = authSession.querySelector(".portal-actions") || authSession;
   const link = document.createElement("a");
   link.id = "admin-portal-link";
+  link.className = "portal-admin-link";
   link.href = "/admin.html";
-  link.textContent = "Portal Administrativo";
-  Object.assign(link.style, {display:"flex",alignItems:"center",justifyContent:"center",width:"100%",margin:"16px 0 8px",padding:"13px",borderRadius:"8px",background:"#102e50",color:"#65d3ff",fontWeight:"800",border:"1px solid #285176"});
-  authSession.insertBefore(link, logoutButton);
+  link.textContent = "Abrir Administrativo";
+  actions.insertBefore(link, logoutButton);
 }
 
 function showAuthenticated(user) {
   if (loginForm) loginForm.hidden = true;
   if (authSession) authSession.hidden = false;
-  showMessage(`Acesso autenticado: ${user.name}`);
+  if (authTitle) authTitle.textContent = "Downloads disponíveis";
+  showMessage(`Conectado como ${user.name}`);
   updateAdminAccess(user);
   loadDownloads();
 }
@@ -44,6 +47,7 @@ function showAuthenticated(user) {
 function showLoggedOut() {
   if (loginForm) loginForm.hidden = false;
   if (authSession) authSession.hidden = true;
+  if (authTitle) authTitle.textContent = "Acesso ao portal";
   document.querySelector("#admin-portal-link")?.remove();
 }
 
@@ -102,14 +106,19 @@ async function loadDownloads() {
     container.replaceChildren();
     if (!data.downloads.length) { const empty=document.createElement("p"); empty.textContent="Nenhum arquivo disponível."; container.appendChild(empty); return; }
     for (const item of data.downloads) {
-      const card=document.createElement("div"); card.className="download-item";
+      const card=document.createElement("article"); card.className="download-item";
+      const content=document.createElement("div"); content.className="download-content";
+      const heading=document.createElement("div"); heading.className="download-heading";
       const title=document.createElement("strong"); title.textContent=item.name;
+      const badge=document.createElement("span"); badge.className="download-badge"; badge.textContent="Disponível";
+      heading.append(title,badge);
       const description=document.createElement("p"); description.textContent=item.description || "";
-      const meta=document.createElement("small");
-      meta.textContent=[item.category,item.version?`Versão ${item.version}`:null,item.file_size?formatFileSize(item.file_size):null].filter(Boolean).join(" • ");
-      card.append(title,description,meta);
-      if (item.sha256) { const hash=document.createElement("small"); hash.className="download-hash"; hash.textContent=`SHA-256: ${item.sha256}`; card.appendChild(hash); }
-      const link=document.createElement("a"); link.href=item.download_url; link.textContent="Download"; card.appendChild(link);
+      const meta=document.createElement("div"); meta.className="download-meta";
+      [item.category,item.version?`Versão ${item.version}`:null,item.file_size?formatFileSize(item.file_size):null].filter(Boolean).forEach(value=>{const span=document.createElement("span");span.textContent=value;meta.appendChild(span);});
+      content.append(heading,description,meta);
+      if (item.sha256) { const hash=document.createElement("div"); hash.className="download-hash"; const label=document.createElement("span"); label.textContent="SHA-256"; const code=document.createElement("code"); code.textContent=item.sha256; hash.append(label,code); content.appendChild(hash); }
+      const link=document.createElement("a"); link.className="download-button"; link.href=item.download_url; link.textContent="Baixar";
+      card.append(content,link);
       container.appendChild(card);
     }
   } catch { container.textContent="Não foi possível carregar os arquivos disponíveis."; }
