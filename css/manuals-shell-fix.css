@@ -1,4 +1,0 @@
-/* Fallback defensivo para a central de manuais. */
-.portal-body .portal-shell{display:grid;grid-template-columns:244px minmax(0,1fr);min-height:100vh}
-.portal-body [hidden]{display:none!important}
-@media(max-width:900px){.portal-body .portal-shell{grid-template-columns:1fr}}
