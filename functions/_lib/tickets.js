@@ -1,3 +1,4 @@
+import {EMAIL_SCHEMA} from './ticket-email.js';
 export const CATEGORIES = ['hardware', 'software', 'redes', 'acessos', 'impressoras', 'outros'];
 export const URGENCIES = ['baixa', 'media', 'alta'];
 export const STATUSES = ['novo', 'em_atendimento', 'aguardando_cliente', 'resolvido', 'encerrado'];
@@ -19,7 +20,8 @@ export const SCHEMA = [
     id TEXT PRIMARY KEY, ticket_id TEXT NOT NULL REFERENCES support_tickets(id),
     object_key TEXT NOT NULL UNIQUE, name TEXT NOT NULL, mime TEXT NOT NULL, size INTEGER NOT NULL)`,
   `CREATE INDEX IF NOT EXISTS support_attachments_ticket ON support_attachments(ticket_id)`,
-  `CREATE TABLE IF NOT EXISTS support_rate_limits (key_hash TEXT PRIMARY KEY, window_start INTEGER NOT NULL, attempts INTEGER NOT NULL)`
+  `CREATE TABLE IF NOT EXISTS support_rate_limits (key_hash TEXT PRIMARY KEY, window_start INTEGER NOT NULL, attempts INTEGER NOT NULL)`,
+  ...EMAIL_SCHEMA
 ];
 const schemas = new WeakMap();
 export async function ensureSupportSchema(db) {

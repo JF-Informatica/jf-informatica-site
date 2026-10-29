@@ -1,4 +1,5 @@
 import {ensureSupportSchema, json, sameOrigin, TicketError, parseSubmission, allowSubmission, receipt} from '../_lib/tickets.js';
+import {emailStatements,scheduleEmails} from '../_lib/ticket-email.js';
 
 export async function onRequestPost(context) {
   if (!sameOrigin(context.request)) return json({status:'error',message:'Origem do envio inválida.'},403);
@@ -10,6 +11,7 @@ export async function onRequestPost(context) {
     const previous = await context.env.DB.prepare('SELECT id, protocol, created_at, request_hash FROM support_tickets WHERE submission_id = ?').bind(submission.data.submission_id).first();
     if (previous) {
       if (previous.request_hash !== submission.hash) throw new TicketError('Este envio já foi utilizado. Abra um novo chamado.',409);
+      await scheduleEmails(context,previous.id);
       return receipt(previous);
     }
     if (!await allowSubmission(context.env.DB, context.request)) return json({status:'error',message:'Limite de envios atingido. Aguarde 10 minutos antes de tentar novamente.'},429,{'Retry-After':'600'});
@@ -28,8 +30,10 @@ export async function onRequestPost(context) {
       context.env.DB.prepare(`INSERT INTO support_tickets
       (id,protocol,submission_id,request_hash,full_name,email,phone,department,category,urgency,description,status,created_at,updated_at)
       VALUES (?,?,?,?,?,?,?,?,?,?,?,'novo',?,?)`).bind(id,protocol,d.submission_id,submission.hash,d.full_name,d.email,d.phone,d.department,d.category,d.urgency,d.description,created,created),
-      ...records
+      ...records,
+      ...emailStatements(context.env.DB,{...d,id,protocol,status:'novo'},{opened:true,eventKey:'opened:'+id})
     ]);
+    await scheduleEmails(context,id);
     return receipt({protocol,created_at:created});
   } catch (error) {
     // A concurrent retry may have committed the same submission. Never delete its objects.

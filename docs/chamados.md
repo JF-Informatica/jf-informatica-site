@@ -8,9 +8,10 @@ urgência, descrição e até três anexos opcionais. O retorno fornece um proto
 somente depois da gravação do chamado. Falhas preservam o formulário para nova
 tentativa; repetir o mesmo envio retorna o mesmo protocolo.
 
-Os chamados são recebidos e acompanhados exclusivamente pelo painel, conforme
-definido para esta etapa. Não há envio automático de e-mails ou WhatsApp.
-Os dados de contato permitem que a equipe responda manualmente pelo canal apropriado.
+Os chamados são recebidos e acompanhados pelo painel. As confirmações de abertura
+e atualizações de status são enfileiradas para envio por Gmail, mediante configuração
+da senha de app no Cloudflare. O WhatsApp continua um canal manual de contato.
+Consulte `docs/email-chamados.md` para ativação, estados de envio e reenvios.
 
 ## Armazenamento
 

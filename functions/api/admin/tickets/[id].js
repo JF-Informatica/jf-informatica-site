@@ -1,5 +1,6 @@
 import {requireAdmin} from '../../../_lib/auth.js';
 import {ensureSupportSchema, json, sameOrigin, uuid, STATUSES, boundedBody} from '../../../_lib/tickets.js';
+import {emailStatements,scheduleEmails} from '../../../_lib/ticket-email.js';
 
 export async function onRequestGet(context) {
   try {
@@ -24,8 +25,18 @@ export async function onRequestPatch(context) {
     catch { return json({status:'error',message:'Dados inválidos.'},400); }
     if (!STATUSES.includes(body?.status)) return json({status:'error',message:'Status inválido.'},400);
     await ensureSupportSchema(context.env.DB);
-    const ticket = await context.env.DB.prepare('UPDATE support_tickets SET status = ?,updated_at = ? WHERE id = ? RETURNING id,protocol,status,updated_at').bind(body.status,new Date().toISOString(),context.params.id).first();
-    if (!ticket) return json({status:'error',message:'Chamado não encontrado.'},404);
-    return json({status:'ok',ticket});
+    const previous=await context.env.DB.prepare('SELECT * FROM support_tickets WHERE id=?').bind(context.params.id).first();
+    if(!previous)return json({status:'error',message:'Chamado não encontrado.'},404);
+    if(previous.status===body.status)return json({status:'ok',ticket:{id:previous.id,protocol:previous.protocol,status:previous.status,updated_at:previous.updated_at},email_queued:false});
+    const updated=new Date().toISOString(),ticket={...previous,status:body.status,updated_at:updated};
+    // Conditional INSERT and UPDATE are one transaction: concurrent edits cannot notify an unapplied status.
+    const conditional=emailStatements(context.env.DB,ticket,{eventKey:`status:${previous.id}:${previous.updated_at}:${previous.status}:${body.status}`,condition:{id:previous.id,status:body.status,updated_at:updated}});
+    const result=await context.env.DB.batch([
+      context.env.DB.prepare('UPDATE support_tickets SET status=?,updated_at=? WHERE id=? AND status=? AND updated_at=?').bind(body.status,updated,previous.id,previous.status,previous.updated_at),
+      ...conditional
+    ]);
+    if(!result[0].meta?.changes)return json({status:'error',message:'O chamado foi alterado por outro atendimento. Atualize os detalhes e tente novamente.'},409);
+    await scheduleEmails(context,ticket.id);
+    return json({status:'ok',ticket:{id:ticket.id,protocol:ticket.protocol,status:ticket.status,updated_at:updated},email_queued:true});
   } catch { return json({status:'error',message:'Não foi possível atualizar o chamado.'},503); }
 }
