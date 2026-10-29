@@ -1,0 +1,73 @@
+/* Original project photographs. Overlays keep the existing text readable. */
+.hero {
+  background: linear-gradient(100deg, rgba(6, 23, 41, .97) 4%, rgba(6, 23, 41, .84) 48%, rgba(6, 23, 41, .48)),
+    url('../assets/datacenter/Imagem04.jpeg') center / cover no-repeat;
+  border-bottom-color: #203e58;
+}
+.hero .hero-copy > .tag { color: #91d4ff; }
+.hero h1 { color: #fff; }
+.hero h1 em { color: #79caff; }
+.hero .lead { color: #d3e1ed; }
+.hero .primary { background: #0873c7; }
+.hero .stats { border-color: rgba(255, 255, 255, .25); }
+.hero .stats span { color: #c5d5e3; }
+.hero .stats strong { color: #fff; }
+.hero-panel { background: rgba(255, 255, 255, .96); border-color: rgba(255, 255, 255, .7); box-shadow: 0 24px 60px rgba(0, 0, 0, .25); }
+
+/* The first service row features the original rack and server photographs. */
+.cards article:nth-child(-n+3) {
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  min-height: 270px;
+}
+.cards article:nth-child(1) { background-image: linear-gradient(rgba(6, 24, 42, .77), rgba(6, 24, 42, .95)), url('../assets/datacenter/Imagem01.jpeg'); }
+.cards article:nth-child(2) { background-image: linear-gradient(rgba(6, 24, 42, .77), rgba(6, 24, 42, .95)), url('../assets/datacenter/Imagem02.jpeg'); }
+.cards article:nth-child(3) { background-image: linear-gradient(rgba(6, 24, 42, .77), rgba(6, 24, 42, .95)), url('../assets/datacenter/Imagem03.jpeg'); }
+.cards article:nth-child(-n+3) i { color: #9bd8ff; }
+.cards article:nth-child(-n+3) h3 { color: #fff; }
+.cards article:nth-child(-n+3) p { color: #dce8f2; }
+
+.help {
+  background: linear-gradient(rgba(244, 247, 249, .93), rgba(244, 247, 249, .95)),
+    url('../assets/datacenter/Imagem06.jpeg') center 43% / cover no-repeat;
+}
+.tech > div:first-child {
+  background: linear-gradient(rgba(6, 24, 42, .83), rgba(6, 24, 42, .94)),
+    url('../assets/datacenter/Imagem10.jpeg') center / cover no-repeat;
+}
+.tech > div:first-child span { color: #9bd8ff; }
+.tech > div:first-child h3 { color: #fff; }
+.tech > div:first-child p { color: #dce8f2; }
+
+.projects {
+  background: linear-gradient(rgba(9, 29, 47, .88), rgba(9, 29, 47, .96)),
+    url('../assets/datacenter/Imagem05.jpeg') center / cover no-repeat;
+}
+.projectGrid article:nth-child(-n+3) {
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+.projectGrid article:nth-child(1) { background-image: linear-gradient(rgba(10, 32, 51, .81), rgba(10, 32, 51, .96)), url('../assets/datacenter/Imagem07.jpeg'); }
+.projectGrid article:nth-child(2) { background-image: linear-gradient(rgba(10, 32, 51, .81), rgba(10, 32, 51, .96)), url('../assets/datacenter/Imagem08.jpeg'); }
+.projectGrid article:nth-child(3) { background-image: linear-gradient(rgba(10, 32, 51, .81), rgba(10, 32, 51, .96)), url('../assets/datacenter/Imagem09.jpeg'); }
+.projectGrid article:nth-child(-n+3) p { color: #d3e1ed; }
+
+.about {
+  background: linear-gradient(90deg, rgba(255, 255, 255, .96), rgba(255, 255, 255, .89)),
+    url('../assets/datacenter/Imagem11.jpeg') center 42% / cover no-repeat;
+}
+.contact-panel {
+  background: linear-gradient(90deg, rgba(243, 247, 250, .96), rgba(243, 247, 250, .9)),
+    url('../assets/datacenter/Imagem12.jpeg') center / cover no-repeat;
+}
+
+@media (max-width: 980px) {
+  .hero { background-position: 58% center; }
+  .heroGrid { gap: 38px; }
+}
+@media (max-width: 580px) {
+  .hero { background-image: linear-gradient(rgba(6, 23, 41, .88), rgba(6, 23, 41, .94)), url('../assets/datacenter/Imagem04.jpeg'); }
+  .hero-panel { box-shadow: 0 15px 35px rgba(0, 0, 0, .2); }
+}
