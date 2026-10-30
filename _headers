@@ -70,3 +70,11 @@
 /admin-identidade
   Cache-Control: no-store
   X-Robots-Tag: noindex, nofollow, noarchive
+
+/admin-caixa.html
+  Cache-Control: no-store
+  X-Robots-Tag: noindex, nofollow, noarchive
+
+/admin-caixa
+  Cache-Control: no-store
+  X-Robots-Tag: noindex, nofollow, noarchive
