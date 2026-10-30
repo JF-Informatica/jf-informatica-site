@@ -1,0 +1,11 @@
+User-agent: *
+Allow: /
+Disallow: /api/
+Allow: /api/branding
+Disallow: /docs/
+Disallow: /tests/
+Disallow: /migrations/
+Disallow: /scripts/
+Disallow: /content/
+Disallow: /.github/
+Sitemap: https://jf-informatica.pages.dev/sitemap.xml

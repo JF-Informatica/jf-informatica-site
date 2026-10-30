@@ -1,0 +1,111 @@
+{
+  "name": "JF Informática",
+  "url": "https://jf-informatica.pages.dev",
+  "telephone": "+5511960849402",
+  "telephoneDisplay": "+55 11 96084-9402",
+  "remoteArea": "Brasil e exterior",
+  "onsiteArea": "até 200 km de Cotia (SP)",
+  "googleMapsUrl": null,
+  "updated": "2026-10-30",
+  "services": [
+    {
+      "slug": "suporte-ti-servidores",
+      "name": "Suporte de TI e Servidores",
+      "title": "Suporte de TI e Servidores em Cotia | JF Informática",
+      "description": "Suporte de TI, Windows Server, Linux e Active Directory. Atendimento remoto no Brasil e exterior e presencial em até 200 km de Cotia (SP).",
+      "lead": "Diagnóstico, administração e sustentação para os servidores e serviços que mantêm sua empresa em funcionamento.",
+      "intro": "Falhas de autenticação, serviços indisponíveis e configurações sem documentação dificultam a operação e a investigação de incidentes. A JF Informática atua na infraestrutura de TI para identificar dependências, avaliar o ambiente e definir um atendimento compatível com a necessidade da empresa.",
+      "problems": ["Usuários com dificuldade para acessar recursos da empresa.", "Servidores Windows ou Linux com serviços instáveis.", "Necessidade de implantação, administração ou migração de infraestrutura."],
+      "scope": ["Windows Server, Linux, Active Directory e DNS.", "Administração e diagnóstico de servidores Dell e HPE.", "Planejamento de mudanças, migração e documentação do ambiente.", "Integração da infraestrutura com redes, backup e monitoramento."],
+      "faq": [["Vocês atendem servidores remotamente?", "Sim. O atendimento remoto abrange Brasil e exterior. A execução depende de acesso autorizado e das condições técnicas do ambiente."], ["É possível atender presencialmente?", "O atendimento presencial abrange até 200 km de Cotia (SP). Informe sua localização para avaliarmos o atendimento."], ["Como solicitar uma avaliação?", "Informe pelo WhatsApp o serviço afetado, o impacto na operação e as tecnologias utilizadas. Não envie senhas ou credenciais na primeira mensagem."]]
+    },
+    {
+      "slug": "redes-firewall-vpn",
+      "name": "Redes, Firewall e VPN",
+      "title": "Redes, Firewall e VPN em Cotia | JF Informática",
+      "description": "Redes corporativas, Wi-Fi, pfSense, VLANs e VPN. Suporte remoto no Brasil e exterior e presencial em até 200 km de Cotia (SP).",
+      "lead": "Conectividade corporativa com diagnóstico de redes, segmentação, firewall e acesso remoto.",
+      "intro": "Uma conexão instável pode envolver equipamentos, cabeamento, regras de firewall, endereçamento ou rotas. O atendimento começa pela análise do caminho dos dados e do impacto no negócio, para orientar uma intervenção que considere os serviços e as dependências da rede.",
+      "problems": ["Internet ou Wi-Fi com quedas e lentidão.", "Falhas na comunicação entre setores, filiais ou redes virtuais.", "Dificuldade para estabelecer ou manter conexões VPN."],
+      "scope": ["pfSense, regras de firewall, segmentação por VLAN e DMZ.", "VPN site-to-site, OpenVPN e WireGuard.", "Switching, roteamento, Wi-Fi corporativo e multi-WAN.", "Diagnóstico de conectividade e documentação das configurações."],
+      "faq": [["Vocês trabalham com pfSense?", "Sim. A atuação inclui diagnóstico, regras de firewall, VLANs, VPN e conectividade com pfSense, conforme o escopo definido para o ambiente."], ["A VPN pode conectar filiais?", "Uma VPN site-to-site pode conectar redes de locais diferentes. A viabilidade depende dos links, do endereçamento, dos equipamentos e das regras de acesso."], ["Uma falha de rede pode ser resolvida remotamente?", "Parte dos diagnósticos e configurações pode ser feita remotamente. Quando houver necessidade de intervenção física, avaliamos o atendimento presencial dentro da área informada."]]
+    },
+    {
+      "slug": "virtualizacao-datacenter",
+      "name": "Virtualização e Datacenter",
+      "title": "Virtualização e Datacenter em Cotia | JF Informática",
+      "description": "Proxmox VE, VMware ESXi e Hyper-V: implantação, migração e diagnóstico. Atendimento remoto e presencial em até 200 km de Cotia (SP).",
+      "lead": "Planejamento e sustentação de ambientes virtuais, com atenção a redes, armazenamento e recuperação.",
+      "intro": "Alterações em uma plataforma de virtualização afetam máquinas, redes e armazenamento. A JF Informática avalia essa relação para planejar implantações, migrações e intervenções, considerando os recursos disponíveis e os requisitos das aplicações que utilizam o ambiente.",
+      "problems": ["Necessidade de migrar ou implantar máquinas virtuais.", "Problemas em storage, redes virtuais ou capacidade do ambiente.", "Dificuldade para recuperar serviços após falhas na infraestrutura."],
+      "scope": ["Proxmox VE, VMware ESXi e Hyper-V.", "Implantação, administração e migração de máquinas virtuais.", "Avaliação de redes virtuais e armazenamento.", "Planejamento de capacidade, recuperação e documentação técnica."],
+      "faq": [["Quais plataformas de virtualização vocês atendem?", "A atuação inclui Proxmox VE, VMware ESXi e Hyper-V, com avaliação do ambiente e definição do escopo antes da intervenção."], ["É possível planejar uma migração?", "Sim. O planejamento considera compatibilidade, recursos, dependências, backup, validação e a janela de execução acordada."], ["Vocês avaliam capacidade e armazenamento?", "Sim. Redes e armazenamento são avaliados junto com a plataforma de virtualização para compreender gargalos e necessidades de capacidade."]]
+    },
+    {
+      "slug": "monitoramento-zabbix-grafana",
+      "name": "Monitoramento com Zabbix e Grafana",
+      "title": "Monitoramento Zabbix e Grafana | JF Informática em Cotia",
+      "description": "Monitoramento de servidores, redes e serviços com Zabbix, Grafana e SNMP. Atendimento remoto no Brasil e exterior, com base em Cotia (SP).",
+      "lead": "Métricas, alertas e painéis para acompanhar o comportamento da infraestrutura e dos serviços.",
+      "intro": "Um painel útil deve representar o ambiente real e ajudar a identificar mudanças relevantes. O trabalho de monitoramento envolve definir o que será acompanhado, como coletar os dados e quais informações precisam chegar à equipe responsável por cada serviço.",
+      "problems": ["Ausência de visibilidade sobre servidores e dispositivos.", "Alertas sem contexto ou indicadores difíceis de interpretar.", "Necessidade de reunir métricas de diferentes ambientes."],
+      "scope": ["Zabbix, Grafana, proxies e coleta por SNMP.", "Monitoramento de servidores, serviços e dispositivos de rede.", "Definição de métricas, alertas e painéis de acompanhamento.", "Integração de dados de infraestrutura e segurança eletrônica."],
+      "faq": [["Vocês implantam Zabbix e Grafana?", "Sim. O escopo pode incluir implantação, ajustes, coleta de métricas, alertas e dashboards, de acordo com o ambiente."], ["É possível acompanhar locais diferentes?", "A arquitetura pode utilizar coleta remota e proxies. O desenho depende da conectividade, dos equipamentos e das permissões disponíveis."], ["O painel substitui o atendimento técnico?", "O monitoramento fornece informações para apoiar a operação. As responsabilidades de análise e atendimento devem ser definidas no escopo do serviço."]]
+    },
+    {
+      "slug": "backup-continuidade",
+      "name": "Backup e Continuidade",
+      "title": "Backup e Continuidade em Cotia | JF Informática",
+      "description": "Automação de backup, retenção, monitoramento e validação de recuperação. Atendimento remoto no Brasil e exterior e presencial na região de Cotia.",
+      "lead": "Rotinas de backup com acompanhamento, retenção e atenção à recuperação dos dados.",
+      "intro": "Uma rotina de cópia precisa ser acompanhada e testada para apoiar a continuidade da operação. A JF Informática atua na organização e automação dos backups, considerando os dados envolvidos, os destinos disponíveis e as necessidades de recuperação da empresa.",
+      "problems": ["Backups executados sem acompanhamento ou histórico claro.", "Dúvidas sobre retenção, agendamento ou capacidade do destino.", "Necessidade de validar restauração e recuperação de dados."],
+      "scope": ["Organização e automação de rotinas de backup.", "Definição de retenção e acompanhamento das execuções.", "Histórico, notificações e visibilidade operacional.", "Planejamento e testes de recuperação, conforme o escopo."],
+      "faq": [["Só criar uma rotina de cópia é suficiente?", "O acompanhamento das execuções, a retenção e os testes de recuperação ajudam a avaliar se a rotina atende à necessidade definida para os dados."], ["Vocês ajudam a validar a restauração?", "Sim. A validação de recuperação pode fazer parte do escopo, com critérios acordados para os dados e o ambiente."], ["O atendimento pode ser remoto?", "Sim, no Brasil e no exterior, quando houver acesso autorizado e condições técnicas. Também atendemos presencialmente em até 200 km de Cotia (SP)."]]
+    },
+    {
+      "slug": "cftv-videomonitoramento",
+      "name": "CFTV e Videomonitoramento",
+      "title": "CFTV e Videomonitoramento em Cotia | JF Informática",
+      "description": "Projeto, implantação e diagnóstico de CFTV IP, VMS e servidores de gravação. Atendimento presencial em até 200 km de Cotia (SP) e suporte remoto.",
+      "lead": "Integração de câmeras IP, redes, servidores de gravação e plataformas de videomonitoramento.",
+      "intro": "Uma falha de gravação pode depender da câmera, da rede, do servidor ou do armazenamento. O atendimento considera esses componentes em conjunto para investigar a causa e orientar o projeto, a implantação ou a sustentação do sistema de videomonitoramento.",
+      "problems": ["Câmeras indisponíveis ou falhas no fluxo de vídeo.", "Problemas de gravação, capacidade ou retenção.", "Necessidade de implantação ou diagnóstico de plataformas VMS."],
+      "scope": ["Projeto, implantação e sustentação de CFTV IP.", "Diagnóstico de VMS, servidores de gravação e storage.", "Avaliação da comunicação entre câmeras, redes e servidores.", "Atuação com tecnologias como Milestone XProtect, Genetec, Axis, Bosch e Hikvision, conforme o ambiente."],
+      "faq": [["Vocês atendem sistemas VMS?", "Sim. O atendimento inclui avaliação da plataforma, da infraestrutura e dos componentes envolvidos, conforme as tecnologias e os acessos disponíveis."], ["Uma falha de gravação pode ser da infraestrutura?", "Sim. Rede, servidor, capacidade e armazenamento podem afetar a gravação e devem ser considerados no diagnóstico."], ["É possível solicitar atendimento presencial?", "Sim, em até 200 km de Cotia (SP). Informe a localização e o cenário para avaliarmos a necessidade de visita."]]
+    },
+    {
+      "slug": "controle-de-acesso",
+      "name": "Controle de Acesso",
+      "title": "Controle de Acesso em Cotia | JF Informática",
+      "description": "Projeto e diagnóstico de controle de acesso, controladoras, leitores, portas e catracas. Atendimento remoto e presencial em até 200 km de Cotia (SP).",
+      "lead": "Apoio técnico para plataformas, dispositivos e integrações de controle de acesso corporativo.",
+      "intro": "O funcionamento do controle de acesso depende da comunicação entre software, controladoras, leitores e dispositivos físicos. A JF Informática atua na avaliação dessas relações para apoiar implantações, investigar falhas e documentar configurações e integrações.",
+      "problems": ["Falhas na comunicação entre plataforma e controladoras.", "Dificuldades com leitores, credenciais ou eventos.", "Necessidade de integrar ou documentar dispositivos e zonas de acesso."],
+      "scope": ["Controladoras, leitores, portas, catracas e credenciais.", "Avaliação de zonas, eventos e comunicação de dispositivos.", "Integrações com a infraestrutura e plataformas corporativas.", "Atuação com tecnologias como LenelS2, Suprema e Control iD, conforme o ambiente."],
+      "faq": [["O diagnóstico inclui rede e servidor?", "Sim. A infraestrutura de comunicação e a plataforma são consideradas junto com os dispositivos de controle de acesso."], ["Vocês avaliam integrações?", "Sim. A avaliação depende das interfaces, da documentação, das permissões e das necessidades do sistema existente."], ["Como apresentar o problema?", "Informe a plataforma, os dispositivos afetados e o comportamento observado. Evite enviar dados de credenciais ou informações sensíveis de usuários pelo primeiro contato."]]
+    },
+    {
+      "slug": "automacao-integracoes",
+      "name": "APIs, Automação e Integrações",
+      "title": "Automação e Integrações de TI | JF Informática em Cotia",
+      "description": "Integrações REST, Python, PowerShell e SQL para automatizar rotinas e conectar sistemas. Atendimento remoto no Brasil e exterior, com base em Cotia.",
+      "lead": "Rotinas e integrações para conectar sistemas, organizar dados e apoiar a operação técnica.",
+      "intro": "Atividades repetitivas e dados distribuídos entre sistemas podem dificultar o acompanhamento da operação. A JF Informática avalia os fluxos existentes para desenvolver automações e integrações com foco na necessidade definida, na origem dos dados e nas permissões de acesso.",
+      "problems": ["Rotinas técnicas manuais e repetitivas.", "Sistemas que precisam trocar dados por APIs.", "Necessidade de transformar informações em métricas ou relatórios."],
+      "scope": ["Integrações por APIs REST.", "Automações em Python, PowerShell e PHP.", "Consultas e rotinas com SQL, MySQL e SQL Server.", "Integração de informações com monitoramento, métricas e relatórios."],
+      "faq": [["Todo sistema pode ser integrado?", "A possibilidade depende das APIs, das interfaces disponíveis, da documentação e das permissões fornecidas pelo responsável pelo sistema."], ["Vocês automatizam rotinas de infraestrutura?", "Sim. O escopo pode envolver coleta de informações, execução de rotinas e integração com ferramentas já utilizadas pela equipe."], ["O desenvolvimento pode ser remoto?", "Sim. O atendimento remoto abrange Brasil e exterior, com acesso autorizado e definição do escopo e das validações necessárias."]]
+    },
+    {
+      "slug": "consultoria-ti",
+      "name": "Consultoria e Documentação de TI",
+      "title": "Consultoria de TI em Cotia | JF Informática",
+      "description": "Assessment, diagnóstico, inventário e documentação de infraestrutura de TI. Atendimento remoto no Brasil e exterior e presencial em até 200 km de Cotia.",
+      "lead": "Avaliação técnica e documentação para compreender o ambiente e planejar sua evolução.",
+      "intro": "Antes de ampliar ou alterar uma infraestrutura, é importante conhecer os serviços, os equipamentos e as dependências existentes. A consultoria organiza esse diagnóstico e apoia a definição de prioridades e procedimentos adequados à operação da empresa.",
+      "problems": ["Ambiente sem inventário ou documentação atualizada.", "Necessidade de avaliar falhas recorrentes e dependências.", "Planejamento de mudanças, procedimentos ou treinamento técnico."],
+      "scope": ["Assessment e diagnóstico de infraestrutura.", "Inventário e documentação técnica.", "Procedimentos operacionais e arquitetura do ambiente.", "Orientação e treinamento técnico conforme o escopo acordado."],
+      "faq": [["A consultoria pode começar por um diagnóstico?", "Sim. O diagnóstico ajuda a reunir informações sobre o cenário e a definir quais pontos precisam de análise ou intervenção."], ["Vocês documentam ambientes existentes?", "Sim. O trabalho pode abranger inventário, configurações, dependências, procedimentos e arquitetura técnica, de acordo com o escopo."], ["O atendimento é apenas presencial?", "Não. Atendemos remotamente no Brasil e no exterior e presencialmente em até 200 km de Cotia (SP), conforme a necessidade do trabalho."]]
+    }
+  ]
+}

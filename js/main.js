@@ -1,8 +1,14 @@
 const menu = document.querySelector("#menu");
 const nav = document.querySelector(".nav nav");
 
-menu?.addEventListener("click", () => nav?.classList.toggle("open"));
-document.querySelectorAll("nav a").forEach(link => link.addEventListener("click", () => nav?.classList.remove("open")));
+menu?.addEventListener("click", () => {
+  const open = nav?.classList.toggle("open") || false;
+  menu.setAttribute("aria-expanded", String(open));
+});
+document.querySelectorAll("nav a").forEach(link => link.addEventListener("click", () => {
+  nav?.classList.remove("open");
+  menu?.setAttribute("aria-expanded", "false");
+}));
 
 const year = document.querySelector("#year");
 if (year) year.textContent = new Date().getFullYear();

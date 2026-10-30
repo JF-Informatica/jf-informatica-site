@@ -35,9 +35,11 @@
 
 /chamados.html
   Cache-Control: no-store
+  X-Robots-Tag: noindex, nofollow, noarchive
 
 /chamados
   Cache-Control: no-store
+  X-Robots-Tag: noindex, nofollow, noarchive
 
 /admin-dashboard-chamados.html
   Cache-Control: no-store
@@ -77,4 +79,33 @@
 
 /admin-caixa
   Cache-Control: no-store
+  X-Robots-Tag: noindex, nofollow, noarchive
+
+/admin
+  X-Robots-Tag: noindex, nofollow, noarchive
+
+/admin-visibilidade
+  Cache-Control: no-store
+  X-Robots-Tag: noindex, nofollow, noarchive
+
+/admin-visibilidade.html
+  Cache-Control: no-store
+  X-Robots-Tag: noindex, nofollow, noarchive
+
+/manuals
+  X-Robots-Tag: noindex, nofollow, noarchive
+
+/content/*
+  X-Robots-Tag: noindex, nofollow, noarchive
+
+/scripts/*
+  X-Robots-Tag: noindex, nofollow, noarchive
+
+/tests/*
+  X-Robots-Tag: noindex, nofollow, noarchive
+
+/migrations/*
+  X-Robots-Tag: noindex, nofollow, noarchive
+
+/.github/*
   X-Robots-Tag: noindex, nofollow, noarchive
