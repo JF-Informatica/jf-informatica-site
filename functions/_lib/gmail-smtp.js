@@ -12,7 +12,9 @@ export function buildMessage(message){
  emailAddress(message.to);emailAddress(message.replyTo||SUPPORT_EMAIL);
  if(typeof message.subject!=='string'||/[\r\n\x00]/.test(message.subject)||message.subject.length>250||!/^[a-f0-9-]{36}@jf-informatica\.pages\.dev$/.test(message.messageId))throw new SMTPError('INVALID_EMAIL_HEADER');
  const body=base64(message.body).match(/.{1,76}/g)?.join('\r\n')||'';
- return ['From: '+encodedWords('JF Informática — Atendimento')+' <'+SUPPORT_EMAIL+'>','To: <'+message.to+'>','Reply-To: <'+(message.replyTo||SUPPORT_EMAIL)+'>','Subject: '+encodedWords(message.subject),'Date: '+new Date().toUTCString(),'Message-ID: <'+message.messageId+'>','MIME-Version: 1.0','Content-Type: text/plain; charset=UTF-8','Content-Transfer-Encoding: base64','',body].join('\r\n');
+ const headers=['From: '+encodedWords('JF Informática — Atendimento')+' <'+SUPPORT_EMAIL+'>','To: <'+message.to+'>','Reply-To: <'+(message.replyTo||SUPPORT_EMAIL)+'>','Subject: '+encodedWords(message.subject),'Date: '+new Date().toUTCString(),'Message-ID: <'+message.messageId+'>','MIME-Version: 1.0'];
+ if(message.html){if(typeof message.html!=='string'||message.html.length>300000)throw new SMTPError('INVALID_EMAIL_HEADER');const boundary='jf_'+message.messageId.split('@')[0],html=base64(message.html).match(/.{1,76}/g)?.join('\r\n')||'';return [...headers,'Content-Type: multipart/alternative; boundary="'+boundary+'"','','--'+boundary,'Content-Type: text/plain; charset=UTF-8','Content-Transfer-Encoding: base64','',body,'--'+boundary,'Content-Type: text/html; charset=UTF-8','Content-Transfer-Encoding: base64','',html,'--'+boundary+'--',''].join('\r\n');}
+ return [...headers,'Content-Type: text/plain; charset=UTF-8','Content-Transfer-Encoding: base64','',body].join('\r\n');
 }
 export function gmailConfigured(env){return typeof env.GMAIL_APP_PASSWORD==='string'&&/^[a-z0-9]{16}$/i.test(env.GMAIL_APP_PASSWORD.replace(/\s/g,''));}
 export async function sendGmail(env,message,{connect,timeoutMs=8000}={}){

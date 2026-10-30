@@ -62,3 +62,11 @@
 /admin-relatorio-chamado
   Cache-Control: no-store
   X-Robots-Tag: noindex, nofollow, noarchive
+
+/admin-identidade.html
+  Cache-Control: no-store
+  X-Robots-Tag: noindex, nofollow, noarchive
+
+/admin-identidade
+  Cache-Control: no-store
+  X-Robots-Tag: noindex, nofollow, noarchive

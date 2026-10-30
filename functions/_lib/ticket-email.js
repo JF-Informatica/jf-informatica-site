@@ -26,7 +26,9 @@ export async function processEmailQueue(env,{ticketId=null,limit=2,deliver=sendG
   const row=await env.DB.prepare(`UPDATE support_email_outbox SET state='processing',attempts=attempts+1,lock_id=?,lease_until=? WHERE id=(SELECT id FROM support_email_outbox WHERE state='pending' AND attempts<5 AND available_at<=?${filter} ORDER BY created_at,id LIMIT 1) RETURNING *`).bind(lock,now+45,...args).first();
   if(!row)break;
   try{
-   await deliver(env,{to:row.recipient,replyTo:row.reply_to,subject:row.subject,body:row.body,messageId:row.id+'@jf-informatica.pages.dev'});
+   let html;
+   if(row.event_key.startsWith('report:')){const delivery=await env.DB.prepare('SELECT snapshot FROM support_report_deliveries WHERE email_id=?').bind(row.id).first();if(delivery)html=JSON.parse(delivery.snapshot).html;}
+   await deliver(env,{to:row.recipient,replyTo:row.reply_to,subject:row.subject,body:row.body,html,messageId:row.id+'@jf-informatica.pages.dev'});
    await env.DB.prepare("UPDATE support_email_outbox SET state='sent',sent_at=?,last_error=NULL,lock_id=NULL,lease_until=0 WHERE id=? AND lock_id=?").bind(new Date().toISOString(),row.id,lock).run();sent++;
   }catch(error){
    const known=/^(SMTP_[A-Z_]+|INVALID_EMAIL_[A-Z_]+|GMAIL_CONFIGURATION_REQUIRED)$/.test(error.code||'')?error.code:'EMAIL_SEND_FAILED';
