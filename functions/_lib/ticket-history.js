@@ -1,0 +1,50 @@
+import { ensureSupportSchema, uuid } from "./tickets.js";
+
+// Separate, additive history; old tickets keep their original contents.
+export const HISTORY_SCHEMA = [
+  `CREATE TABLE IF NOT EXISTS support_ticket_history (
+ id TEXT PRIMARY KEY,ticket_id TEXT NOT NULL REFERENCES support_tickets(id),
+ kind TEXT NOT NULL,status TEXT,body TEXT NOT NULL DEFAULT '',created_at TEXT NOT NULL)`,
+  "CREATE INDEX IF NOT EXISTS support_ticket_history_ticket ON support_ticket_history(ticket_id,created_at)",
+];
+export async function ensureHistory(db) {
+  await ensureSupportSchema(db);
+  await db.batch(HISTORY_SCHEMA.map((sql) => db.prepare(sql)));
+}
+
+// Ownership is checked again on every request, including downloads.
+export async function ownedTicket(db, user, identifier) {
+  const value = String(identifier || "")
+    .trim()
+    .toUpperCase();
+  if (!uuid(value) && !/^JF-\d{8}-[A-F0-9]{12}$/.test(value)) return null;
+  if (!user.email?.trim()) return null;
+  return db
+    .prepare(
+      `SELECT id,protocol,status,urgency,category,description,created_at,updated_at
+ FROM support_tickets WHERE (id=? OR protocol=?) AND LOWER(TRIM(email))=LOWER(TRIM(?))`,
+    )
+    .bind(value.toLowerCase(), value, user.email)
+    .first();
+}
+export async function historyFor(db, ticket) {
+  const result = await db
+    .prepare(
+      "SELECT id,kind,status,body,created_at FROM support_ticket_history WHERE ticket_id=? ORDER BY created_at,id",
+    )
+    .bind(ticket.id)
+    .all();
+  const entries = result.results || [],
+    lastStatus = entries.filter((e) => e.kind === "status").at(-1);
+  // A previously closed ticket has no reliable close timestamp; never invent it.
+  const closedAt =
+    ticket.status === "encerrado" && lastStatus?.status === "encerrado"
+      ? lastStatus.created_at
+      : null;
+  return {
+    entries,
+    closed_at: closedAt,
+    history_note:
+      "O histórico detalhado registra eventos a partir da implantação da consulta. Eventos anteriores podem não estar disponíveis.",
+  };
+}

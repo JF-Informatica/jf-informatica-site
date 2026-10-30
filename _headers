@@ -109,3 +109,11 @@
 
 /.github/*
   X-Robots-Tag: noindex, nofollow, noarchive
+
+/consultar-chamado
+  Cache-Control: no-store
+  X-Robots-Tag: noindex, nofollow, noarchive
+
+/consultar-chamado.html
+  Cache-Control: no-store
+  X-Robots-Tag: noindex, nofollow, noarchive
