@@ -161,6 +161,18 @@ test("status changes build a timeline and closing dates reset when reopened", as
   assert.equal(data.ticket.closed_at, null);
   assert.ok(data.timeline.some((e) => e.status === "encerrado"));
 });
+test("equal timestamps preserve insertion order instead of sorting random event IDs", async (t) => {
+  const { env, ticket } = await fixture(t);
+  for (const status of ["em_atendimento", "resolvido", "encerrado"])
+    assert.equal((await change(env, ticket.id, status)).status, 200);
+  const tied = env.sqlite.prepare('SELECT updated_at FROM support_tickets WHERE id=?').get(ticket.id).updated_at;
+  const reversed = ['ffffffff-ffff-4fff-8fff-ffffffffffff','88888888-8888-4888-8888-888888888888','00000000-0000-4000-8000-000000000000'];
+  for (const [index,status] of ['em_atendimento','resolvido','encerrado'].entries())
+    env.sqlite.prepare('UPDATE support_ticket_history SET created_at=?,id=? WHERE ticket_id=? AND status=?').run(tied,reversed[index],ticket.id,status);
+  const data = await (await query(env,ticket.protocol)).json();
+  assert.deepEqual(data.timeline.filter(e=>e.kind==='status').map(e=>e.status),['em_atendimento','resolvido','encerrado']);
+  assert.equal(data.ticket.closed_at,tied);
+});
 test("legacy closed ticket never receives a fabricated closing date", async (t) => {
   const { env, ticket } = await fixture(t);
   env.sqlite

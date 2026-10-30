@@ -30,7 +30,8 @@ export async function ownedTicket(db, user, identifier) {
 export async function historyFor(db, ticket) {
   const result = await db
     .prepare(
-      "SELECT id,kind,status,body,created_at FROM support_ticket_history WHERE ticket_id=? ORDER BY created_at,id",
+      // Insertion order breaks timestamp ties; random UUIDs do not represent time.
+      "SELECT id,kind,status,body,created_at FROM support_ticket_history WHERE ticket_id=? ORDER BY created_at,rowid",
     )
     .bind(ticket.id)
     .all();
