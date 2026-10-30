@@ -12,19 +12,21 @@ export async function ensureHistory(db) {
   await db.batch(HISTORY_SCHEMA.map((sql) => db.prepare(sql)));
 }
 
-// Ownership is checked again on every request, including downloads.
+// Recheck access for every request and download. Administrators already have
+// access to every ticket through the administrative API; clients only see their own.
 export async function ownedTicket(db, user, identifier) {
   const value = String(identifier || "")
     .trim()
     .toUpperCase();
   if (!uuid(value) && !/^JF-\d{8}-[A-F0-9]{12}$/.test(value)) return null;
-  if (!user.email?.trim()) return null;
+  const isAdmin = user.role === "admin";
+  if (!isAdmin && !user.email?.trim()) return null;
   return db
     .prepare(
       `SELECT id,protocol,status,urgency,category,description,created_at,updated_at
- FROM support_tickets WHERE (id=? OR protocol=?) AND LOWER(TRIM(email))=LOWER(TRIM(?))`,
+ FROM support_tickets WHERE (id=? OR protocol=?) AND (?=1 OR LOWER(TRIM(email))=LOWER(TRIM(?)))`,
     )
-    .bind(value.toLowerCase(), value, user.email)
+    .bind(value.toLowerCase(), value, isAdmin ? 1 : 0, user.email || "")
     .first();
 }
 export async function historyFor(db, ticket) {

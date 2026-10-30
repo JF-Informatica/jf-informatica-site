@@ -4,7 +4,7 @@ Página: `/consultar-chamado`. HTML, CSS e JavaScript estáticos; back-end em Cl
 
 ## Acesso
 
-O usuário entra com a conta existente do portal. O número do chamado não é uma credencial: cada consulta e download verifica sessão ativa e igualdade entre o e-mail da conta e o e-mail informado na abertura. Sem cadastro público automático. A equipe deve cadastrar o cliente com o e-mail correto. Administradores continuam acessando chamados de terceiros apenas pelas rotas administrativas existentes.
+O usuário entra com a conta existente do portal. O número do chamado não é uma credencial: cada consulta e download verifica sessão ativa. Para clientes, exige igualdade entre o e-mail da conta e o e-mail informado na abertura. Sem cadastro público automático. A equipe deve cadastrar o cliente com o e-mail correto. Administradores podem consultar qualquer chamado também nesta página, usando as permissões que já possuem no painel administrativo. O papel vem da sessão validada no servidor, nunca de dados enviados pelo navegador. Todos os status são consultáveis.
 
 O botão de consulta permanece disponível antes do login. Ao digitar o protocolo e consultar sem sessão, a página direciona o foco ao formulário de entrada e preserva o número. Após autenticar, retoma a consulta automaticamente. A autorização no servidor permanece obrigatória.
 

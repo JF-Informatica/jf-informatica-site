@@ -41,7 +41,9 @@ export async function onRequestPost(context) {
       return json(
         {
           message:
-            "Chamado não encontrado para esta conta. Confira o protocolo e o e-mail cadastrado.",
+            auth.user.role === "admin"
+              ? "Chamado não encontrado. Confira o protocolo completo."
+              : "Chamado não encontrado para esta conta. Confira o protocolo e o e-mail cadastrado.",
         },
         404,
       );

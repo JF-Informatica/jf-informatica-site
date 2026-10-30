@@ -33,7 +33,7 @@
     $("lookup-login-panel").hidden = !!user;
     $("lookup-session").hidden = !user;
     $("lookup-submit").disabled = false;
-    $("lookup-user").textContent = user?.name || "Cliente";
+    $("lookup-user").textContent = (user?.name || "Cliente") + (user?.role === "admin" ? " · Administrador" : "");
     if (!user) {
       $("lookup-result").hidden = true;
       $("lookup-facts").replaceChildren();
@@ -44,7 +44,9 @@
     message(
       "lookup-message",
       user
-        ? "Acesso validado. Informe o protocolo para consultar."
+        ? user.role === "admin"
+          ? "Acesso de administrador: consulte chamados de qualquer cliente, em todos os status."
+          : "Acesso validado. Consulte seus chamados abertos, resolvidos ou encerrados."
         : "Entre na sua conta para consultar seus chamados.",
     );
   }

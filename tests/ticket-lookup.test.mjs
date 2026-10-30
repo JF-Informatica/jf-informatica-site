@@ -87,7 +87,7 @@ test("ticket existence and attachments cannot be probed through another client a
   assert.deepEqual(await other.json(), await missing.json());
   assert.equal(
     (await query(env, ticket.protocol, { token: "admin-test-token" })).status,
-    404,
+    200,
   );
   assert.equal(
     (await query(env, ticket.protocol, { origin: "https://evil.invalid" }))
@@ -141,6 +141,27 @@ test("client downloads require ownership and exact attachment-ticket binding", a
     .prepare("UPDATE users SET email='different@example.invalid' WHERE id=2")
     .run();
   assert.equal((await get()).status, 404);
+});
+test("administrators can consult other customers in every status while client isolation remains enforced", async (t) => {
+  const {env,ticket}=await fixture(t);
+  for (const status of ['novo','em_atendimento','aguardando_cliente','resolvido','encerrado']) {
+    env.sqlite.prepare('UPDATE support_tickets SET status=? WHERE id=?').run(status,ticket.id);
+    for (const token of ['admin-test-token','client-test-token']) {
+      const response=await query(env,ticket.protocol,{token});
+      assert.equal(response.status,200);
+      assert.equal((await response.json()).ticket.status,status);
+    }
+  }
+  env.sqlite.prepare("UPDATE users SET email='other@example.invalid' WHERE id=2").run();
+  assert.equal((await query(env,ticket.protocol)).status,404);
+  // A client cannot promote itself by adding an admin flag to the request.
+  const forged=await lookup(context(env,'/api/client/tickets/lookup',{token:'client-test-token',body:JSON.stringify({identifier:ticket.protocol,role:'admin'})}));
+  assert.equal(forged.status,404);
+  const attachment=crypto.randomUUID();await env.DOWNLOADS.put('admin-evidence',new TextEncoder().encode('test'));
+  env.sqlite.prepare('INSERT INTO support_attachments VALUES(?,?,?,?,?,?)').run(attachment,ticket.id,'admin-evidence','evidence.txt','text/plain',4);
+  const params={id:ticket.id,attachment};
+  assert.equal((await download(context(env,'/api/client/tickets/'+ticket.id+'/attachments/'+attachment,{method:'GET',token:'admin-test-token',params}))).status,200);
+  assert.equal((await download(context(env,'/api/client/tickets/'+ticket.id+'/attachments/'+attachment,{method:'GET',token:'client-test-token',params}))).status,404);
 });
 test("status changes build a timeline and closing dates reset when reopened", async (t) => {
   const { env, ticket } = await fixture(t);
