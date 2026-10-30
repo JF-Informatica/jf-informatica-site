@@ -10,6 +10,8 @@
     },
     priorities = { baixa: "Baixa", media: "Média", alta: "Alta / Crítica" };
   let searchVersion = 0;
+  let authenticated = false;
+  let pendingLookup = false;
   const date = (value) =>
     value
       ? new Date(value).toLocaleString("pt-BR", {
@@ -27,9 +29,10 @@
     $(id).classList.toggle("lookup-error", error);
   }
   function session(user) {
+    authenticated = !!user;
     $("lookup-login-panel").hidden = !!user;
     $("lookup-session").hidden = !user;
-    $("lookup-submit").disabled = !user;
+    $("lookup-submit").disabled = false;
     $("lookup-user").textContent = user?.name || "Cliente";
     if (!user) {
       $("lookup-result").hidden = true;
@@ -44,6 +47,14 @@
         ? "Acesso validado. Informe o protocolo para consultar."
         : "Entre na sua conta para consultar seus chamados.",
     );
+  }
+  // Keep the search actionable: guide anonymous clients to login, preserving the ID.
+  function promptLogin() {
+    $("lookup-login-panel").hidden = false;
+    message("lookup-message", "Para consultar este chamado, entre na sua conta acima. O número digitado foi preservado.");
+    message("lookup-login-message", "Entre com sua conta do portal para continuar a consulta.");
+    $("lookup-login-panel").scrollIntoView({ behavior: "smooth", block: "center" });
+    $("lookup-login").elements.username.focus({ preventScroll: true });
   }
   async function api(url, options = {}) {
     const controller = new AbortController(),
@@ -148,6 +159,12 @@
   }
   $("lookup-search").addEventListener("submit", async (event) => {
     event.preventDefault();
+    await sessionReady;
+    if (!authenticated) {
+      pendingLookup = true;
+      promptLogin();
+      return;
+    }
     const version = ++searchVersion;
     $("lookup-result").hidden = true;
     $("lookup-submit").disabled = true;
@@ -162,11 +179,16 @@
       });
       if (version === searchVersion) render(data);
     } catch (error) {
-      if (version === searchVersion)
+      if (version === searchVersion) {
         message("lookup-message", error.message, true);
+        if (!authenticated) {
+          pendingLookup = true;
+          promptLogin();
+        }
+      }
     } finally {
       if (version === searchVersion)
-        $("lookup-submit").disabled = !$("lookup-login-panel").hidden;
+        $("lookup-submit").disabled = false;
     }
   });
   $("lookup-login").addEventListener("submit", async (event) => {
@@ -187,7 +209,12 @@
       form.reset();
       session(data.user);
       message("lookup-login-message", "");
-      $("lookup-identifier").focus();
+      if (pendingLookup && $("lookup-identifier").value.trim()) {
+        pendingLookup = false;
+        $("lookup-search").requestSubmit();
+      } else {
+        $("lookup-identifier").focus();
+      }
     } catch (error) {
       message("lookup-login-message", error.message, true);
     } finally {
@@ -196,6 +223,7 @@
   });
   $("lookup-logout").onclick = async () => {
     ++searchVersion;
+    pendingLookup = false;
     try {
       await api("/api/logout", { method: "POST" });
       session(null);
@@ -203,7 +231,7 @@
       message("lookup-message", error.message, true);
     }
   };
-  (async () => {
+  const sessionReady = (async () => {
     try {
       const data = await api("/api/me");
       session(data.user);

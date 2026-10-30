@@ -6,6 +6,8 @@ Página: `/consultar-chamado`. HTML, CSS e JavaScript estáticos; back-end em Cl
 
 O usuário entra com a conta existente do portal. O número do chamado não é uma credencial: cada consulta e download verifica sessão ativa e igualdade entre o e-mail da conta e o e-mail informado na abertura. Sem cadastro público automático. A equipe deve cadastrar o cliente com o e-mail correto. Administradores continuam acessando chamados de terceiros apenas pelas rotas administrativas existentes.
 
+O botão de consulta permanece disponível antes do login. Ao digitar o protocolo e consultar sem sessão, a página direciona o foco ao formulário de entrada e preserva o número. Após autenticar, retoma a consulta automaticamente. A autorização no servidor permanece obrigatória.
+
 `POST /api/client/tickets/lookup`, JSON `{ "identifier": "JF-20261030-A1B2C3D4E5F6" }` (também aceita UUID do ticket). Retorna dados gerais, descrição, timeline e anexos apenas do solicitante autenticado. O identificador não vai na URL. Chamado inexistente e chamado de outra conta retornam a mesma resposta 404. GET não lista tickets. Sem envio de dados pessoais ao serviço de métricas.
 
 `GET /api/client/tickets/:id/attachments/:attachment` verifica novamente proprietário e vínculo do anexo ao ticket. O download usa o armazenamento privado existente, sem expor chave do objeto ou criar URL pública. Não executa evidências dentro da origem do portal.
