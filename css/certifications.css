@@ -1,0 +1,7 @@
+.certifications{background:linear-gradient(120deg,#f4f7fa,#e9eff5);border-block:1px solid #d2dde7;scroll-margin-top:90px}
+.certifications h2{max-width:800px;margin:0 0 38px}
+.certifications-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px;list-style:none;margin:0;padding:0}
+.certification-card{display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:24px;padding:34px 24px;background:#fff;border:1px solid #cbd7e1;border-top:3px solid #0873c7;border-radius:8px;box-shadow:0 12px 30px #17314909;text-align:center}
+.certification-card img{display:block;width:200px;max-width:100%;height:200px;object-fit:contain}
+.certification-card h3{margin:0;max-width:290px;color:#173149;font-size:18px;line-height:1.5;font-weight:700}
+@media(max-width:760px){.certifications-grid{grid-template-columns:1fr}.certification-card{padding:28px 20px}}
