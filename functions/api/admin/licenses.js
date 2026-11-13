@@ -34,7 +34,8 @@ export async function onRequestGet(context) {
     const result = await context.env.DB.prepare(`
       SELECT id, public_id, customer_name, product_name, license_key, environment,
              equipment_name, activated_at, expires_at, active, last_seen_at,
-             notes, created_at, updated_at
+             notes, created_at, updated_at,
+             (SELECT activation_id FROM license_activations WHERE license_id = licenses.id) AS activation_id
       FROM licenses
       ORDER BY customer_name COLLATE NOCASE ASC, product_name COLLATE NOCASE ASC, id ASC
     `).all();
