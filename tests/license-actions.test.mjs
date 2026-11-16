@@ -21,6 +21,6 @@ test('JSON button remains available for both linked and unlinked licenses',async
   await vm.runInContext('loadLicenses()',scope);
   const rows=elements.get('#licenses-table-body').children;
   assert.equal(rows.length,2);
-  assert.deepEqual(rows[0].children.at(-1).children.map(child=>child.textContent),['Baixar JSON','Sem vínculo']);
-  assert.deepEqual(rows[1].children.at(-1).children.map(child=>child.textContent),['Baixar JSON','Desvincular instalação']);
+  assert.deepEqual(rows[0].children.at(-1).children.map(child=>child.textContent),['Baixar JSON','Atualizar data','Sem vínculo']);
+  assert.deepEqual(rows[1].children.at(-1).children.map(child=>child.textContent),['Baixar JSON','Atualizar data','Desvincular instalação']);
 });
